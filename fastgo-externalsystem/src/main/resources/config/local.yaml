@@ -1,0 +1,13 @@
+http:
+  listner:
+    host: "localhost"
+    port: "9082"
+    path: "/fastGoCall/{serviceType}"
+    
+db:
+  oracle:
+    host: "localhost"
+    port: "1521"
+    username: "dummy"
+    password: "dummy"
+    service: "XE"

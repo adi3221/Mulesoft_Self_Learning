@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    
+    <flow name="retrievetravelontiproutesandschedule-sapi-main">
+        <http:listener config-ref="retrievetravelontiproutesandschedule-sapi-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="retrievetravelontiproutesandschedule-sapi-config" />
+		<error-handler ref="globalErrorHandlerError_Handler" />
+        
+    </flow>
+    <flow name="retrievetravelontiproutesandschedule-sapi-console">
+        <http:listener config-ref="retrievetravelontiproutesandschedule-sapi-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="retrievetravelontiproutesandschedule-sapi-config" />
+		<error-handler ref="globalErrorHandlerError_Handler" />
+        
+    </flow>
+    <sub-flow name="retrievetravelontiproutesandschedule-sapi-initialiseRequestVariable-Sub_Flow" doc:id="a8fc0543-c242-4fdf-8932-058e3ac434e3" >
+		<ee:transform doc:name="Transform Message">
+            <ee:variables>
+                <ee:set-variable variableName="transportType"><![CDATA[attributes.uriParams.'transportType']]></ee:set-variable>
+                <ee:set-variable variableName="transportCompany"><![CDATA[attributes.uriParams.'transportCompany']]></ee:set-variable>
+				<ee:set-variable variableName="transactionId"><![CDATA[%dw 2.0
+output application/java
+---
+attributes.headers.transactionId]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+	</sub-flow>
+	<flow name="get:\(transportType)\(transportCompany)\routes:retrievetravelontiproutesandschedule-sapi-config">
+		<flow-ref doc:name="Flow Reference Initialise Request Variable" doc:id="1d35de3e-a2da-4ace-85c6-06498757f03f" name="retrievetravelontiproutesandschedule-sapi-initialiseRequestVariable-Sub_Flow"/>
+		<logger level="INFO" doc:name="Logger" doc:id="0f092520-8586-4979-9302-ec74fc597382" message="Routes Request Received For  TarvelOnTip SAPI for TransactionId: #[vars.transactionId]"/>
+		<flow-ref doc:name="Flow Reference" doc:id="3e625a76-32b4-4b87-b7f6-50d7e54ad17a" name="travelOnTip-getRoutes-implementationSub_Flow"/>
+		<logger level="INFO" doc:name="Logger" doc:id="7b328394-1fce-4263-a9f2-8d11c0d6301f" message="Routes Response Sent  For  TarvelOnTip SAPI for TransactionId: #[vars.transactionId]"/>
+    </flow>
+    <flow name="get:\(transportType)\(transportCompany)\schedules:retrievetravelontiproutesandschedule-sapi-config">
+		<flow-ref doc:name="Flow Reference Initialise Request Variable" doc:id="3661dd18-22f4-403f-a58c-3b39109a2b7a" name="retrievetravelontiproutesandschedule-sapi-initialiseRequestVariable-Sub_Flow"/>
+		<logger level="INFO" doc:name="Logger" doc:id="3d7e4dd1-46e8-45ee-9ad3-dd7e37730ecc" message="Schedules Request Received For  TarvelOnTip SAPI for TransactionId: #[vars.transactionId]"/>
+		<flow-ref doc:name="Flow Reference" doc:id="3d0e75aa-19a4-4bba-b5c8-868e6a4dc441" name="travelOnTip-getSchedules-implementationSub_Flow"/>
+		<logger level="INFO" doc:name="Logger" doc:id="8db18085-72f1-4db1-aa9c-adbe603f2795" message="Schedules Response Sent  For  TarvelOnTip SAPI for TransactionId: #[vars.transactionId]"/>
+    </flow>
+</mule>

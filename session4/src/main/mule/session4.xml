@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="552e5276-4849-4df1-9695-d3a49ab0b648" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="session4Flow" doc:id="6ff50943-7e89-410f-bcd3-cafae9e764f1" >
+		<http:listener doc:name="Listener" doc:id="004a9e6e-b32d-4421-9619-dc909a01b241" config-ref="HTTP_Listener_config" path="/test"/>
+		<set-variable value="#[attributes.queryParams.name]" doc:name="name" doc:id="7c99fc29-76ee-4590-b904-21f7baac6268" variableName="name"/>
+		<set-variable value="	#[attributes.method]" doc:name="Set Variable" doc:id="21b491cf-3727-4103-8b52-5fb198aaf23a" variableName="methodName"/>
+		<file:read doc:name="Read" doc:id="5fa59ab2-b20a-4f55-aed5-679f7e81100f" path="C:\Users\atiwari\AnypointStudio\studio-workspace\session4\mule-artifact.json"/>
+		<set-payload value='#["hi " ++ vars.name as String ++ " your method is " ++ vars.methodName as String]' doc:name="Set Payload" doc:id="06ff6ba8-2224-4499-9248-836aa27b59de" />
+	</flow>
+	<flow name="session4Flow-private-flow" doc:id="a5617b23-9dcf-436c-a93f-454285454400" >
+		<set-payload value='#["you are in private flow"]' doc:name="Set Payload" doc:id="58283c62-aae3-4ae4-bb8a-4275e97a6b94" />
+	</flow>
+	<sub-flow name="session4Sub_Flow" doc:id="1bf0cd4a-6135-4543-806d-364e177153fc" >
+		<set-payload value='#["hi you are there in sub flow"]' doc:name="Sub-flow Payload" doc:id="654614b2-5924-41b0-83af-8da8fa65b8dd" />
+	</sub-flow>
+</mule>

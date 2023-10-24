@@ -1,0 +1,22 @@
+[
+	{
+    	"locationCode" : "BEN-SG",
+    	"locationDesc" : "Beauna Vista Singapore" 
+	},
+	{
+    	"locationCode" : "KLG-MY",
+    	"locationDesc" : "Kaling Malaysia" 
+	},
+	{
+    	"locationCode" : "MUM-IND",
+    	"locationDesc" : "Mumbai India" 
+	},
+	{
+    	"locationCode" : "CHN-IND",
+    	"locationDesc" : "Chennai India" 
+	},
+	{
+    	"locationCode" : "DEL-IND",
+    	"locationDesc" : "New Delhi India" 
+	}
+]
